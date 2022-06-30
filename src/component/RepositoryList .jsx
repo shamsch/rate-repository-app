@@ -17,17 +17,15 @@ const RepositoryList = () => {
 		return <></>;
 	}
 
-	console.log(repositories, loading);
 	const repositoryNodes = repositories
 		? repositories.edges.map((edge) => edge.node)
 		: [];
 
-	console.log(repositoryNodes);
 	return (
 		<FlatList
 			data={repositoryNodes}
 			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({ item }) => <RepositoryItem item={item}></RepositoryItem>}
+			renderItem={({ item, index }) => <RepositoryItem item={item} key={index}></RepositoryItem>}
 		/>
 	);
 };
