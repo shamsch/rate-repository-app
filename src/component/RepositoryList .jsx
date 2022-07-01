@@ -3,31 +3,37 @@ import useRepositories from "../hooks/useRepositories";
 import RepositoryItem from "./RepositoryItem ";
 
 const styles = StyleSheet.create({
-	separator: {
-		height: 10,
-	},
+    separator: {
+        height: 10,
+    },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
+export const RepositoryListContainer = ({ repositories }) => {
+    const repositoryNodes = repositories
+        ? repositories.edges.map((edge) => edge.node)
+        : [];
+
+    return (
+        <FlatList
+            data={repositoryNodes}
+            ItemSeparatorComponent={ItemSeparator}
+            renderItem={({ item, index }) => (
+                <RepositoryItem item={item} key={index}></RepositoryItem>
+            )}
+        />
+    );
+};
+
 const RepositoryList = () => {
-	const { repositories, loading } = useRepositories();
+    const { repositories, loading } = useRepositories();
 
 	if (loading) {
 		return <></>;
 	}
-
-	const repositoryNodes = repositories
-		? repositories.edges.map((edge) => edge.node)
-		: [];
-
-	return (
-		<FlatList
-			data={repositoryNodes}
-			ItemSeparatorComponent={ItemSeparator}
-			renderItem={({ item, index }) => <RepositoryItem item={item} key={index}></RepositoryItem>}
-		/>
-	);
+	
+    return <RepositoryListContainer repositories={repositories} />;
 };
 
 export default RepositoryList;

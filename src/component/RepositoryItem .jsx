@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
 
 const RepositoryItem = ({ item }) => {
     return (
-        <View style={styles.container}>
+        <View style={styles.container} testID="repoItem">
             <View style={styles.top}>
                 <Image
                     style={styles.logo}
@@ -80,13 +80,13 @@ const RepositoryItem = ({ item }) => {
             </View>
 
             <View style={{ flexDirection: "row" }}>
-                <View style={styles.box}>
+                <View style={styles.box} testID="stargazerCount">
                     <Text style={styles.count}>
                         {millify(item.stargazersCount)}
                     </Text>
                     <Text style={styles.boxText}>Stars</Text>
                 </View>
-                <View style={styles.box}>
+                <View style={styles.box} testID="forksCount">
                     <Text style={styles.count}>{millify(item.forksCount)}</Text>
                     <Text style={styles.boxText}>Forks</Text>
                 </View>
