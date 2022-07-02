@@ -11,16 +11,6 @@ import * as yup from "yup";
 import { useSignIn } from "../hooks/useSignIn";
 import { useNavigate } from "react-router-native";
 
-const validationSchema = yup.object().shape({
-	username: yup
-		.string()
-		.min(4, "username must be greater or equal to 4 characters")
-		.required("username is required"),
-	password: yup
-		.string()
-		.min(6, "Password must be greater or equal to 6 characters")
-		.required("Password is required"),
-});
 
 const styles = StyleSheet.create({
 	input: {
@@ -46,6 +36,17 @@ const styles = StyleSheet.create({
 	},
 });
 
+export const validationSchema = yup.object().shape({
+	username: yup
+		.string()
+		.min(4, "username must be greater or equal to 4 characters")
+		.required("username is required"),
+	password: yup
+		.string()
+		.min(6, "Password must be greater or equal to 6 characters")
+		.required("Password is required"),
+});
+
 const SignIn = () => {
 	const [signIn] = useSignIn();
 	const navigate = useNavigate()
@@ -66,14 +67,20 @@ const SignIn = () => {
 		}
 	};
 	return (
+		<SignInForm handler={onFormSubmit} validationSchema={validationSchema}/>
+	);
+};
+
+export const SignInForm = ({handler, validationSchema})	=> {
+	return (
 		<View>
 			<Formik
 				initialValues={{ username: "", password: "" }}
 				onSubmit={async (values, actions) => {
 					actions.resetForm();
-					await onFormSubmit(values);
+					await handler(values);
 				}}
-				validationSchema={validationSchema}
+				validationSchema={validationSchema?validationSchema:null}
 			>
 				{(props) => (
 					<View>
@@ -98,7 +105,7 @@ const SignIn = () => {
 						{props.touched.password && props.errors.password && (
 							<Text style={styles.errorText}>{props.errors.password}</Text>
 						)}
-						<Pressable onPress={props.handleSubmit}>
+						<Pressable testID="signin" onPress={props.handleSubmit}>
 							<Text style={styles.submitBtn} title="Submit">
 								Sign in
 							</Text>
@@ -109,5 +116,6 @@ const SignIn = () => {
 		</View>
 	);
 };
+
 
 export default SignIn;
