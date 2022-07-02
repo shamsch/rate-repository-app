@@ -8,9 +8,9 @@ import AuthStorageContext from "../contexts/authStorageContext";
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Constants.statusBarHeight,
         backgroundColor: "#00BFFF",
-        padding: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 20,
         flexDirection: "row",
     },
     text: {

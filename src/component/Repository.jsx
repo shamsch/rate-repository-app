@@ -1,7 +1,12 @@
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import { View, Text, Image, StyleSheet, Button } from "react-native";
 import React from "react";
 import millify from "millify";
-import { useNavigate } from "react-router-native";
+import { useQuery } from "@apollo/client";
+import { GET_REPOSITORY } from "../graphql/queries";
+import { useParams } from "react-router-native";
+import {openURL} from 'expo-linking'
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -59,61 +64,71 @@ const styles = StyleSheet.create({
     },
 });
 
+const Repository = () => {
+    const {id} = useParams();
+    const {data, loading} = useQuery(GET_REPOSITORY, {
+        variables: { repositoryId: id },
+    })
 
+    if (loading) {
+        return <></>;
+    }
+    const {repository} = data;
 
-const RepositoryItem = ({ item }) => {
-    const navigation = useNavigate();
-
-    const handlePress = () => {
-        navigation(`/repository/${item.id}`);
-    };
+    const handlePress = async () => {
+        await openURL(repository.url)
+    }
 
     return (
-        <Pressable onPress={handlePress} style={styles.container} testID="repoItem">
+        <View style={styles.container} testID="repoItem">
             <View style={styles.top}>
                 <Image
                     style={styles.logo}
                     source={{
-                        uri: `${item.ownerAvatarUrl}`,
+                        uri: `${repository.ownerAvatarUrl}`,
                     }}
                 />
                 {/* this flex shrink makes the text stay within the view which is within the the top view */}
                 <View style={{ flexShrink: 1 }}> 
-                    <Text style={styles.title}>{item.fullName}</Text>
-                    <Text style={styles.subtitle}>{item.description}</Text>
+                    <Text style={styles.title}>{repository.fullName}</Text>
+                    <Text style={styles.subtitle}>{repository.description}</Text>
                 </View>
             </View>
 
             <View style={{ alignSelf: "flex-start", marginLeft: 60 }}>
-                <Text style={styles.tag}>{item.language}</Text>
+                <Text style={styles.tag}>{repository.language}</Text>
             </View>
 
             <View style={{ flexDirection: "row" }}>
                 <View style={styles.box} testID="stargazerCount">
                     <Text style={styles.count}>
-                        {millify(item.stargazersCount)}
+                        {millify(repository.stargazersCount)}
                     </Text>
                     <Text style={styles.boxText}>Stars</Text>
                 </View>
                 <View style={styles.box} testID="forksCount">
-                    <Text style={styles.count}>{millify(item.forksCount)}</Text>
+                    <Text style={styles.count}>{millify(repository.forksCount)}</Text>
                     <Text style={styles.boxText}>Forks</Text>
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.count}>
-                        {millify(item.reviewCount)}
+                        {millify(repository.reviewCount)}
                     </Text>
                     <Text style={styles.boxText}>Reviews</Text>
                 </View>
                 <View style={styles.box}>
                     <Text style={styles.count}>
-                        {millify(item.ratingAverage)}
+                        {millify(repository.ratingAverage)}
                     </Text>
                     <Text style={styles.boxText}>Rating</Text>
                 </View>
             </View>
-        </Pressable>
+
+            <Button onPress={handlePress} title="Open in GitHub"/>
+            
+
+        </View>
     );
 };
 
-export default RepositoryItem;
+export default Repository;
