@@ -14,6 +14,15 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
+const Header = ({ selected, setSelected, search, setSearch }) => {
+    return (
+        <View>
+            <SortPicker selected={selected} setSelected={setSelected} />
+            <Search search={search} setSearch={setSearch} />
+        </View>
+    );
+};
+
 export const RepositoryListContainer = ({
     repositories,
     selected,
@@ -29,13 +38,12 @@ export const RepositoryListContainer = ({
         <>
             <FlatList
                 ListHeaderComponent={
-                    <>
-                        <SortPicker
-                            selected={selected}
-                            setSelected={setSelected}
-                        />
-                        <Search search={search} setSearch={setSearch} />
-                    </>
+                    <Header
+                        selected={selected}
+                        setSelected={setSelected}
+                        search={search}
+                        setSearch={setSearch}
+                    />
                 }
                 data={repositoryNodes}
                 ItemSeparatorComponent={ItemSeparator}
