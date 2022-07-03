@@ -159,7 +159,7 @@ const reviewStyles = StyleSheet.create({
         textAlign: "center",
     },
     left:{
-        marginTop: 50,
+        marginVertical: 20,
         padding: 5,
         width: 80,
         height: 40,

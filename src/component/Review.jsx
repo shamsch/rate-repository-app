@@ -1,7 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { Formik } from "formik";
-import { Pressable, View, StyleSheet, Text } from "react-native";
-import { TextInput } from "react-native-web";
+import { Pressable, View, StyleSheet, Text, TextInput } from "react-native";
 import { useNavigate } from "react-router-native";
 import * as yup from "yup";
 import { ADD_REVIEW } from "../graphql/mutations";
@@ -71,9 +70,8 @@ export const Review = () => {
                 },
             },
         });
-        resetForm();
         if (data) {
-            navigate("/");
+            navigate(`/repository/${ownerName}.${repositoryName}`);
         } else {
             console.log(errors);
         }
