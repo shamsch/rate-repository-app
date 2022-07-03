@@ -6,6 +6,7 @@ import { GET_REPOSITORY } from "../graphql/queries";
 import { useParams } from "react-router-native";
 import { openURL } from "expo-linking";
 import format from "date-fns/format";
+import Searchbar from "./Search";
 
 const styles = StyleSheet.create({
     container: {
@@ -210,7 +211,7 @@ const Repository = () => {
 
     return (
         <FlatList
-            ListHeaderComponent={<RepositoryInfo repository={repository} />}
+            ListHeaderComponent={<><RepositoryInfo repository={repository} /> <Searchbar></Searchbar></>}
             data={reviews.edges}
             renderItem={({ item }) => <RepositoryReview review={item} />}
             keyExtractor={(item) => item.node.id}
