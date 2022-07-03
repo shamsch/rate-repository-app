@@ -5,7 +5,7 @@ export const GET_REPOSITORIES = gql`
         repositories {
             edges {
                 node {
-					id
+                    id
                     reviewCount
                     stargazersCount
                     ownerAvatarUrl
@@ -34,6 +34,20 @@ export const GET_REPOSITORY = gql`
             description
             forksCount
             name
+            reviews {
+                edges {
+                    node {
+                        id
+                        text
+                        rating
+                        createdAt
+                        user {
+                            id
+                            username
+                        }
+                    }
+                }
+            }
         }
     }
 `;
