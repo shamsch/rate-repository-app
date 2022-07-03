@@ -14,4 +14,4 @@ function SearchDefault({search, setSearch}) {
   )
 }
 
-export const Search = memo(SearchDefault)
+export const Search = SearchDefault

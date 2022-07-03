@@ -2,7 +2,7 @@ import { FlatList, View, StyleSheet, Text } from "react-native";
 import useRepositories from "../hooks/useRepositories";
 import SortPicker from "./SortPicker";
 import RepositoryItem from "./RepositoryItem ";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Search } from "./Search";
 import { useDebounce } from "use-debounce";
 
@@ -14,21 +14,10 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const Header = ({ selected, setSelected, search, setSearch }) => {
-    return (
-        <View>
-            <SortPicker selected={selected} setSelected={setSelected} />
-            <Search search={search} setSearch={setSearch} />
-        </View>
-    );
-};
-
 export const RepositoryListContainer = ({
     repositories,
     selected,
     setSelected,
-    search,
-    setSearch,
 }) => {
     const repositoryNodes = repositories
         ? repositories.edges.map((edge) => edge.node)
@@ -38,12 +27,7 @@ export const RepositoryListContainer = ({
         <>
             <FlatList
                 ListHeaderComponent={
-                    <Header
-                        selected={selected}
-                        setSelected={setSelected}
-                        search={search}
-                        setSearch={setSearch}
-                    />
+                    <SortPicker selected={selected} setSelected={setSelected} />
                 }
                 data={repositoryNodes}
                 ItemSeparatorComponent={ItemSeparator}
@@ -55,9 +39,10 @@ export const RepositoryListContainer = ({
     );
 };
 
-const RepositoryList = () => {
+
+const RepositoryList = ({search}) => {
     const [selected, setSelected] = useState("LATEST");
-    const [search, setSearch] = useState("");
+    
     const [debouncedSearch] = useDebounce(search, 500);
 
     const { repositories, loading } = useRepositories(
@@ -70,14 +55,26 @@ const RepositoryList = () => {
     }
 
     return (
-        <RepositoryListContainer
-            repositories={repositories}
-            selected={selected}
-            setSelected={setSelected}
-            search={search}
-            setSearch={setSearch}
-        />
+        <>
+            
+            <RepositoryListContainer
+                repositories={repositories}
+                selected={selected}
+                setSelected={setSelected}
+            />
+        </>
     );
 };
 
-export default RepositoryList;
+const RepositoryView =  () => {
+    const [search, setSearch] = useState("");
+
+    return (
+        <>
+            <Search search={search} setSearch={setSearch} />
+            <RepositoryList search={search} />
+        </>
+    );
+};
+
+export default RepositoryView;
