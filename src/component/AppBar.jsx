@@ -28,19 +28,18 @@ const AppBar = () => {
         fetchPolicy: "cache-and-network",
     });
 
-    const auth = useContext(AuthStorageContext)
+    const auth = useContext(AuthStorageContext);
 
-    const apollo = useApolloClient()
-    
+    const apollo = useApolloClient();
+
     if (loading) {
         return <></>;
     }
 
     const handleOnPress = async () => {
-        await auth.removeAccessToken()
-        apollo.resetStore()
-
-    }
+        await auth.removeAccessToken();
+        apollo.resetStore();
+    };
     const showLogOut = data ? data["me"] : false;
 
     return (
@@ -52,9 +51,16 @@ const AppBar = () => {
                     </Link>
                 </Pressable>
                 {showLogOut ? (
-                    <Pressable style={styles.item} onPress={handleOnPress}>
-                        <Text style={styles.text}>Sign Out</Text>
-                    </Pressable>
+                    <>
+                        <Pressable style={styles.item}>
+                            <Link to="/createReview">
+                                <Text style={styles.text}>Create a review</Text>
+                            </Link>
+                        </Pressable>
+                        <Pressable style={styles.item} onPress={handleOnPress}>
+                            <Text style={styles.text}>Sign Out</Text>
+                        </Pressable>
+                    </>
                 ) : (
                     <Pressable style={styles.item}>
                         <Link to="/login">

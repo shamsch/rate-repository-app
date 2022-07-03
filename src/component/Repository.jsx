@@ -180,7 +180,7 @@ const reviewStyles = StyleSheet.create({
 
 const RepositoryReview = ({ review }) => {
     const { node } = review;
-    
+
     return (
         <View style={reviewStyles.container}>
             <View style={[reviewStyles.rating, reviewStyles.left]}>
@@ -199,6 +199,7 @@ const Repository = () => {
     const { id } = useParams();
     const { data, loading } = useQuery(GET_REPOSITORY, {
         variables: { repositoryId: id },
+        fetchPolicy: "cache-and-network",
     });
 
     if (loading) {
