@@ -11,7 +11,7 @@ const MyReview = () => {
         return <></>;
     }
 
-    if (!data) {
+    if (data.me.reviews === undefined) {
         return <></>;
     }
 
