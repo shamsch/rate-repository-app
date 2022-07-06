@@ -1,11 +1,21 @@
-import { View, Text, Image, StyleSheet, Button, FlatList } from "react-native";
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    Button,
+    FlatList,
+    Pressable,
+    Alert,
+} from "react-native";
 import React from "react";
 import millify from "millify";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_REPOSITORY } from "../graphql/queries";
-import { useParams } from "react-router-native";
+import { useNavigate, useParams } from "react-router-native";
 import { openURL } from "expo-linking";
 import format from "date-fns/format";
+import { DELETE_REVIEW } from "../graphql/mutations";
 
 const styles = StyleSheet.create({
     container: {
@@ -175,11 +185,41 @@ const reviewStyles = StyleSheet.create({
         borderColor: "blue",
         padding: 5,
     },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 10,
+    },
+    buttons: {
+        width: 100,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: 10,
+    },
+    redButton: {
+        backgroundColor: "lightcoral",
+    },
+    blueButton: {
+        backgroundColor: "lightblue",
+    },
+    buttonText: {
+        fontSize: 14,
+        color: "white",
+        fontWeight: "bold",
+    },
 });
 
-export const RepositoryReview = ({ review, myReview }) => {
-    const { node } = review[0];
-    console.log(node);
+export const RepositoryReview = ({ review, myReview, refetch }) => {
+    const { node } = review;
+    const navigate = useNavigate();
+    const [deleteReview, { loading }] = useMutation(DELETE_REVIEW) 
+    
+    if(loading){
+        return <Text>Loading...</Text>
+    }
+
     return (
         <View style={reviewStyles.container}>
             <View style={[reviewStyles.rating, reviewStyles.left]}>
@@ -190,12 +230,65 @@ export const RepositoryReview = ({ review, myReview }) => {
             <View style={reviewStyles.right}>
                 {!myReview ? (
                     <Text style={reviewStyles.title}>{node.user.username}</Text>
-                ) : <Text style={reviewStyles.title}>{node.repository.name}</Text>}
+                ) : (
+                    <Text style={reviewStyles.title}>
+                        {node.repository.name}
+                    </Text>
+                )}
 
                 <Text style={reviewStyles.subtitle}>
                     {format(new Date(node.createdAt), "dd-MM-yyyy")}
                 </Text>
                 <Text style={reviewStyles.text}>{node.text}</Text>
+                {myReview ? (
+                    <View style={reviewStyles.buttonContainer}>
+                        <Pressable
+                            style={[
+                                reviewStyles.buttons,
+                                reviewStyles.blueButton,
+                            ]}
+                            onPress={() => {
+                                console.log(node.repository.id);
+                                navigate(`/repository/${node.repository.id}`);
+                            }}
+                        >
+                            <Text style={reviewStyles.buttonText}>
+                                See Repo
+                            </Text>
+                        </Pressable>
+                        <Pressable
+                            style={[
+                                reviewStyles.buttons,
+                                reviewStyles.redButton,
+                            ]}
+                            onPress={() => {
+                                Alert.alert("Delete", "Are you sure?", [
+                                    {
+                                        text: "Cancel",
+                                        onPress: () =>
+                                            console.log("Cancel Pressed"),
+                                    },
+                                    {
+                                        text: "OK",
+                                        onPress: async () => {
+                                            const res = await deleteReview({
+                                                variables: {
+                                                    deleteReviewId: node.id,
+                                                },
+                                            });
+                                            console.log(res)
+                                            await refetch();
+                                        },
+                                    },
+                                ]);
+                            }}
+                        >
+                            <Text style={reviewStyles.buttonText}>
+                                Delete Review
+                            </Text>
+                        </Pressable>
+                    </View>
+                ) : null}
             </View>
         </View>
     );

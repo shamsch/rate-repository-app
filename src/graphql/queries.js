@@ -92,9 +92,11 @@ export const MY_REVIEWS = gql`
                         rating
                         repository {
                             name
+							id
                         }
                         createdAt
                         text
+						id
                     }
                 }
             }
