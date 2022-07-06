@@ -4,6 +4,7 @@ import { Pressable, View, StyleSheet, Text, TextInput } from "react-native";
 import { useNavigate } from "react-router-native";
 import * as yup from "yup";
 import { ADD_REVIEW } from "../graphql/mutations";
+import { MY_REVIEWS } from "../graphql/queries";
 
 const styles = StyleSheet.create({
     input: {
@@ -69,6 +70,7 @@ export const Review = () => {
                     text,
                 },
             },
+            refetchQueries: [{ query: MY_REVIEWS }],
         });
         if (data) {
             navigate(`/repository/${ownerName}.${repositoryName}`);
