@@ -11,18 +11,24 @@ const useRepositories = (selected, debouncedSearch) => {
 			orderBy: "RATING_AVERAGE",
 			orderDirection: "DESC",
 			searchKeyword: debouncedSearch ? debouncedSearch : "",
+			first: 4,
+			after: "",
 		};
 	} else if (selected === "DESC") {
 		variables = {
 			orderBy: "RATING_AVERAGE",
 			orderDirection: "ASC",
 			searchKeyword: debouncedSearch ? debouncedSearch : "",
+			first: 4,
+			after: "",
 		};
 	} else if (selected === "LATEST") {
 		variables = {
 			orderBy: "CREATED_AT",
 			orderDirection: "ASC",
 			searchKeyword: debouncedSearch ? debouncedSearch : "",
+			first: 4,
+			after: "",
 		};
 	}
 
@@ -37,7 +43,13 @@ const useRepositories = (selected, debouncedSearch) => {
 		if (!canFetchMore) {
 			return;
 		}
+		console.log("fetch more");
 
+		variables = {
+			...variables,
+			after: data.repositories.pageInfo.endCursor,
+		};
+		console.log("variables", variables);
 		fetchMore({
 			variables: {
 				after: data.repositories.pageInfo.endCursor,
