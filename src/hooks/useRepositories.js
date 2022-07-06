@@ -43,13 +43,13 @@ const useRepositories = (selected, debouncedSearch) => {
 		if (!canFetchMore) {
 			return;
 		}
-		console.log("fetch more");
+		
 
 		variables = {
 			...variables,
 			after: data.repositories.pageInfo.endCursor,
 		};
-		console.log("variables", variables);
+		
 		fetchMore({
 			variables: {
 				after: data.repositories.pageInfo.endCursor,

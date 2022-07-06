@@ -36,7 +36,6 @@ export const RepositoryListContainer = ({
 					<RepositoryItem item={item} key={index}></RepositoryItem>
 				)}
 				onEndReached={() => {
-					console.log("onEndReached");
 					fetchMore();
 				}}
 				onEndReachedThreshold={0.5}

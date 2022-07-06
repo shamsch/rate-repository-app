@@ -128,7 +128,6 @@ const reviewStyles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         flexDirection: "row",
-
     },
     top: {
         flexDirection: "row",
@@ -158,16 +157,16 @@ const reviewStyles = StyleSheet.create({
         color: "black",
         textAlign: "center",
     },
-    left:{
+    left: {
         marginVertical: 20,
         padding: 5,
         width: 80,
         height: 40,
     },
-    right:{
-        flexShrink:1
+    right: {
+        flexShrink: 1,
     },
-    textWithRoundBorder:{
+    textWithRoundBorder: {
         borderRadius: 40,
         color: "blue",
         fontWeight: "bold",
@@ -175,7 +174,7 @@ const reviewStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "blue",
         padding: 5,
-    }
+    },
 });
 
 const RepositoryReview = ({ review }) => {
@@ -184,11 +183,15 @@ const RepositoryReview = ({ review }) => {
     return (
         <View style={reviewStyles.container}>
             <View style={[reviewStyles.rating, reviewStyles.left]}>
-                <Text style={reviewStyles.textWithRoundBorder}>{node.rating}</Text>
+                <Text style={reviewStyles.textWithRoundBorder}>
+                    {node.rating}
+                </Text>
             </View>
             <View style={reviewStyles.right}>
                 <Text style={reviewStyles.title}>{node.user.username}</Text>
-                <Text style={reviewStyles.subtitle}>{format(new Date(node.createdAt), "dd-MM-yyyy")}</Text>
+                <Text style={reviewStyles.subtitle}>
+                    {format(new Date(node.createdAt), "dd-MM-yyyy")}
+                </Text>
                 <Text style={reviewStyles.text}>{node.text}</Text>
             </View>
         </View>
@@ -197,8 +200,13 @@ const RepositoryReview = ({ review }) => {
 
 const Repository = () => {
     const { id } = useParams();
-    const { data, loading } = useQuery(GET_REPOSITORY, {
-        variables: { repositoryId: id },
+    let variables = {
+        repositoryId: id,
+        first: 3,
+        after: "",
+    };
+    const { data, loading, fetchMore } = useQuery(GET_REPOSITORY, {
+        variables,
         fetchPolicy: "cache-and-network",
     });
 
@@ -207,13 +215,26 @@ const Repository = () => {
     }
     const { repository } = data;
     const { reviews } = repository;
-
+    const { hasNextPage, endCursor } = reviews.pageInfo;
     return (
         <FlatList
             ListHeaderComponent={<RepositoryInfo repository={repository} />}
             data={reviews.edges}
             renderItem={({ item }) => <RepositoryReview review={item} />}
             keyExtractor={(item) => item.node.id}
+            onEndReached={() => {
+                if (hasNextPage) {
+                    variables = {
+                        ...variables,
+                        after: endCursor,
+                    };
+                    
+                    fetchMore({
+                        variables,
+                    });
+                }
+            }}
+            onEndReachedThreshold={0.5}
         />
     );
 };

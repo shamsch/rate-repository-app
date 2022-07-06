@@ -12,41 +12,46 @@ export const uri = Constants.manifest.extra.uri;
 //Luckily, Apollo Client provides a predefined field policy, relayStylePagination, which can be used in this case.
 
 const cache = new InMemoryCache({
-	typePolicies: {
-		Query: {
-			fields: {
-				repositories: relayStylePagination(),
-			},
-		},
-	},
+    typePolicies: {
+        Query: {
+            fields: {
+                repositories: relayStylePagination(),
+            },
+        },
+        Repository: {
+            fields: {
+                reviews: relayStylePagination(),
+            },
+        },
+    },
 });
 
 const httpLink = createHttpLink({
-	// Replace the IP address part with your own IP address!
-	uri: uri,
+    // Replace the IP address part with your own IP address!
+    uri: uri,
 });
 
 const createApolloClient = (authStorage) => {
-	const authLink = setContext(async (_, { headers }) => {
-		try {
-			const accessToken = await authStorage.getAccessToken();
-			return {
-				headers: {
-					...headers,
-					authorization: accessToken ? `Bearer ${accessToken}` : "",
-				},
-			};
-		} catch (e) {
-			console.log(e);
-			return {
-				headers,
-			};
-		}
-	});
-	return new ApolloClient({
-		link: authLink.concat(httpLink),
-		cache,
-	});
+    const authLink = setContext(async (_, { headers }) => {
+        try {
+            const accessToken = await authStorage.getAccessToken();
+            return {
+                headers: {
+                    ...headers,
+                    authorization: accessToken ? `Bearer ${accessToken}` : "",
+                },
+            };
+        } catch (e) {
+            console.log(e);
+            return {
+                headers,
+            };
+        }
+    });
+    return new ApolloClient({
+        link: authLink.concat(httpLink),
+        cache,
+    });
 };
 
 export default createApolloClient;
