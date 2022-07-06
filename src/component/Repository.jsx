@@ -177,9 +177,9 @@ const reviewStyles = StyleSheet.create({
     },
 });
 
-const RepositoryReview = ({ review }) => {
-    const { node } = review;
-
+export const RepositoryReview = ({ review, myReview }) => {
+    const { node } = review[0];
+    console.log(node);
     return (
         <View style={reviewStyles.container}>
             <View style={[reviewStyles.rating, reviewStyles.left]}>
@@ -188,7 +188,10 @@ const RepositoryReview = ({ review }) => {
                 </Text>
             </View>
             <View style={reviewStyles.right}>
-                <Text style={reviewStyles.title}>{node.user.username}</Text>
+                {!myReview ? (
+                    <Text style={reviewStyles.title}>{node.user.username}</Text>
+                ) : <Text style={reviewStyles.title}>{node.repository.name}</Text>}
+
                 <Text style={reviewStyles.subtitle}>
                     {format(new Date(node.createdAt), "dd-MM-yyyy")}
                 </Text>
@@ -228,7 +231,7 @@ const Repository = () => {
                         ...variables,
                         after: endCursor,
                     };
-                    
+
                     fetchMore({
                         variables,
                     });

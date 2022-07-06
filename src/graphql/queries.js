@@ -82,3 +82,22 @@ export const LOGIN_STATUS = gql`
         }
     }
 `;
+
+export const MY_REVIEWS = gql`
+    query Reviews {
+        me {
+            reviews {
+                edges {
+                    node {
+                        rating
+                        repository {
+                            name
+                        }
+                        createdAt
+                        text
+                    }
+                }
+            }
+        }
+    }
+`;

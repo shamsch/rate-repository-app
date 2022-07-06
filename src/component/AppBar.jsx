@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#00BFFF",
         paddingHorizontal: 10,
-        paddingVertical: 20,
+        paddingVertical: 30,
         flexDirection: "row",
     },
     text: {
@@ -53,6 +53,11 @@ const AppBar = () => {
                 {showLogOut ? (
                     <>
                         <Pressable style={styles.item}>
+                            <Link to="/myReviews">
+                                <Text style={styles.text}>My Reviews</Text>
+                            </Link>
+                        </Pressable>
+                        <Pressable style={styles.item}>
                             <Link to="/createReview">
                                 <Text style={styles.text}>Create a review</Text>
                             </Link>
@@ -63,18 +68,17 @@ const AppBar = () => {
                     </>
                 ) : (
                     <>
-                     <Pressable style={styles.item}>
-                        <Link to="/login">
-                            <Text style={styles.text}>Sign In</Text>
-                        </Link>
-                    </Pressable>
-                    <Pressable style={styles.item}>
-                        <Link to="/signup">
-                            <Text style={styles.text}>Sign Up</Text>
-                        </Link>
-                    </Pressable>
+                        <Pressable style={styles.item}>
+                            <Link to="/login">
+                                <Text style={styles.text}>Sign In</Text>
+                            </Link>
+                        </Pressable>
+                        <Pressable style={styles.item}>
+                            <Link to="/signup">
+                                <Text style={styles.text}>Sign Up</Text>
+                            </Link>
+                        </Pressable>
                     </>
-                   
                 )}
             </ScrollView>
         </View>
