@@ -17,17 +17,19 @@ const MyReview = () => {
 
     return (
         <View>
-            <FlatList
-                data={data.me.reviews.edges}
-                renderItem={({ item }) => (
-                    <RepositoryReview
-                        review={item}
-                        myReview={true}
-                        refetch={refetch}
-                    />
-                )}
-                keyExtractor={(item) => item.node.id}
-            />
+            {data.me.reviews && (
+                <FlatList
+                    data={data.me.reviews.edges}
+                    renderItem={({ item }) => (
+                        <RepositoryReview
+                            review={item}
+                            myReview={true}
+                            refetch={refetch}
+                        />
+                    )}
+                    keyExtractor={(item) => item.node.id}
+                />
+            )}
         </View>
     );
 };
